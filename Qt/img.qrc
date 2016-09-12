@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/arrow_down.png</file>
+        <file>img/arrow-up.png</file>
+        <file>img/button_down_small.png</file>
+        <file>img/button_left.png</file>
+        <file>img/button_minus.png</file>
+        <file>img/button_pause_orange.png</file>
+        <file>img/button_pause_small.png</file>
+        <file>img/button_play_big.png</file>
+        <file>img/button_play_clear.png</file>
+        <file>img/button_play_small_grey.png</file>
+        <file>img/button_play_small.png</file>
+        <file>img/button_plus.png</file>
+        <file>img/button_redo.png</file>
+        <file>img/button_right.png</file>
+        <file>img/button_stop_clear.png</file>
+        <file>img/button_stop_green.png</file>
+        <file>img/button_stop_small.png</file>
+        <file>img/button_stop.png</file>
+        <file>img/button_up.png</file>
+        <file>img/icon_clock.png</file>
+        <file>img/icon_delete.png</file>
+        <file>img/icon_heart.png</file>
+        <file>img/icon_save.png</file>
+        <file>img/icon_schedule.png</file>
+        <file>img/logo_inbramed_small.png</file>
+        <file>img/logo_inbramed.png</file>
+        <file>img/logo_inbrasport_partner.png</file>
+        <file>img/logo_inbrasport.png</file>
+        <file>img/player_pause.png</file>
+        <file>img/icon_stopwatch.png</file>
+    </qresource>
+</RCC>

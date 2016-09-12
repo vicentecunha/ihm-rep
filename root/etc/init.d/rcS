@@ -1,0 +1,103 @@
+#! /bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin:
+runlevel=S
+prevlevel=N
+umask 022
+export PATH runlevel prevlevel
+
+#
+#	Trap CTRL-C &c only in this shell so we can interrupt subprocesses.
+#
+trap ":" INT QUIT TSTP
+/bin/hostname FriendlyARM
+
+/bin/mount -n -t proc none /proc
+/bin/mount -n -t sysfs none /sys
+/bin/mount -n -t usbfs none /proc/bus/usb
+/bin/mount -t ramfs none /dev
+
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+/sbin/mdev -s
+/bin/hotplug
+# mounting file system specified in /etc/fstab
+mkdir -p /dev/pts
+mkdir -p /dev/shm
+/bin/mount -n -t devpts none /dev/pts -o mode=0622
+/bin/mount -n -t tmpfs tmpfs /dev/shm
+/bin/mount -n -t ramfs none /tmp
+/bin/mount -n -t ramfs none /var
+mkdir -p /var/empty
+mkdir -p /var/log
+mkdir -p /var/lock
+mkdir -p /var/run
+mkdir -p /var/tmp
+
+/sbin/hwclock -s
+
+syslogd
+/etc/rc.d/init.d/netd start
+echo "                        " > /dev/tty1
+echo "Starting networking..." > /dev/tty1
+sleep 1
+/etc/rc.d/init.d/httpd start
+echo "                        " > /dev/tty1
+echo "Starting web server..." > /dev/tty1
+sleep 1
+/etc/rc.d/init.d/leds start
+echo "                        " > /dev/tty1
+echo "Starting leds service..." > /dev/tty1
+echo "                        "
+sleep 1
+
+/sbin/ifconfig lo 127.0.0.1
+/etc/init.d/ifconfig-eth0
+
+#/bin/qtopia &
+#echo "                                  " > /dev/tty1
+#echo "Starting Qtopia, please waiting..." > /dev/tty1
+
+#
+# Qt variables
+#
+
+export LD_LIBRARY_PATH=/usr/local/tslib/lib
+export QTDIR=/usr/local/Qt
+export QWS_MOUSE_PROTO=tslib:/dev/input/event0
+export TSLIB_CALIBFILE=/etc/pointercal
+export TSLIB_CONFFILE=/usr/local/etc/ts.conf
+export TSLIB_CONSOLEDEVICE=none
+export TSLIB_FBDEVICE=/dev/fb0
+export TSLIB_PLUGINDIR=/usr/local/tslib/lib/ts
+export TSLIB_TSDEVICE=/usr/local/tslib/lib/ts
+export TSLIB_TSEVENTTYPE=INPUT
+export QWS_DISPLAY=LinuxFB:mmWidth=105:mmHeight=140
+
+#
+# Local variables
+#
+
+INBRAMED_APP=/usr/local/bin/IHM_REV1
+QT_FLAGS=-qws
+CONSOLE_PATH=/dev/tty1
+QTDIR_SYMBOLIC=/qtbuild
+
+#
+# Symbolic links
+#
+
+if [ ! -L $QTDIR_SYMBOLIC ]; then
+        echo "ln -s $QTDIR $QTDIR_SYMBOLIC" > $CONSOLE_PATH
+        ln -s $QTDIR $QTDIR_SYMBOLIC
+fi
+
+#
+# Main application
+#
+
+echo " " > $CONSOLE_PATH
+echo "Starting $INBRAMED_APP... " > $CONSOLE_PATH
+echo " " > $CONSOLE_PATH
+
+chmod +x $INBRAMED_APP
+.$INBRAMED_APP $QT_FLAGS &> $CONSOLE_PATH &
