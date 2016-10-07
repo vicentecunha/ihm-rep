@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: mainwindow.h
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -35,6 +42,14 @@ private:
     protocolwindow* protocolw;
     database_t database;
     savefileparser_t saveFileParser;
+    unsigned char buf[SERIAL_BUFFER_LENGTH];
+    QString bufStr;
+    unsigned int rpm;
+    float torque;
+
+    void sendString(QString);
+    void parseSerial(int);
+    void serialErrorHandler();
 
 private slots:
     void on_pb_increaseLoad_clicked();

@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: protocol.h
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 

@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: database.h
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 #ifndef DATABASE_H
 #define DATABASE_H
 

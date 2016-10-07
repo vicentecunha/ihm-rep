@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: savefileparser.h
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 #ifndef SAVEFILEPARSER_H
 #define SAVEFILEPARSER_H
 
@@ -7,6 +14,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QString>
+#include <QStringList>
 
 class savefileparser_t
 {

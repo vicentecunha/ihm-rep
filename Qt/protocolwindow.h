@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: protocolwindow.h
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 #ifndef PROTOCOLWINDOW_H
 #define PROTOCOLWINDOW_H
 

@@ -37,7 +37,7 @@
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>50</y>
+      <y>60</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -60,7 +60,7 @@
     <property name="geometry">
      <rect>
       <x>610</x>
-      <y>200</y>
+      <y>210</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -81,7 +81,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>200</y>
+      <y>210</y>
       <width>61</width>
       <height>31</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>60</y>
+      <y>70</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -123,7 +123,7 @@
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>180</y>
+      <y>190</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -146,7 +146,7 @@
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>230</y>
+      <y>240</y>
       <width>141</width>
       <height>81</height>
      </rect>
@@ -174,7 +174,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>90</y>
+      <y>100</y>
       <width>201</width>
       <height>101</height>
      </rect>
@@ -204,14 +204,14 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>570</x>
-      <y>90</y>
+      <y>100</y>
       <width>191</width>
       <height>101</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>27</pointsize>
+      <pointsize>24</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -234,7 +234,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>230</y>
+      <y>240</y>
       <width>151</width>
       <height>81</height>
      </rect>
@@ -249,7 +249,7 @@ border-radius:8;</string>
 border-radius:8;</string>
     </property>
     <property name="text">
-     <string>0</string>
+     <string>0.00</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -262,7 +262,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>180</y>
+      <y>190</y>
       <width>58</width>
       <height>16</height>
      </rect>
@@ -279,9 +279,9 @@ border-radius:8;</string>
    <widget class="QLabel" name="lbl_torqueUnit">
     <property name="geometry">
      <rect>
-      <x>633</x>
-      <y>290</y>
-      <width>71</width>
+      <x>650</x>
+      <y>300</y>
+      <width>61</width>
       <height>31</height>
      </rect>
     </property>
@@ -291,14 +291,14 @@ border-radius:8;</string>
      </font>
     </property>
     <property name="text">
-     <string> kg.f.m</string>
+     <string> kgf.m</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_inbramed">
     <property name="geometry">
      <rect>
-      <x>212</x>
-      <y>-6</y>
+      <x>220</x>
+      <y>0</y>
       <width>361</width>
       <height>81</height>
      </rect>
@@ -314,7 +314,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>330</y>
+      <y>340</y>
       <width>121</width>
       <height>110</height>
      </rect>
@@ -341,7 +341,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>330</y>
+      <y>340</y>
       <width>121</width>
       <height>110</height>
      </rect>
@@ -368,7 +368,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>330</y>
+      <y>340</y>
       <width>121</width>
       <height>110</height>
      </rect>
@@ -395,7 +395,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>230</y>
+      <y>240</y>
       <width>81</width>
       <height>71</height>
      </rect>
@@ -422,7 +422,7 @@ border-radius:8;</string>
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>230</y>
+      <y>240</y>
       <width>81</width>
       <height>71</height>
      </rect>
@@ -445,38 +445,11 @@ border-radius:8;</string>
      </size>
     </property>
    </widget>
-   <widget class="QCheckBox" name="cb_timesFive">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>120</y>
-      <width>61</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>25</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>x5</string>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>50</width>
-      <height>50</height>
-     </size>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pb_protocol">
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>330</y>
+      <y>340</y>
       <width>121</width>
       <height>110</height>
      </rect>
@@ -502,10 +475,10 @@ border-radius:8;</string>
    <widget class="QPushButton" name="pb_manual">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>90</y>
-      <width>181</width>
-      <height>71</height>
+      <x>340</x>
+      <y>120</y>
+      <width>121</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
@@ -515,6 +488,28 @@ border-radius:8;</string>
     </property>
     <property name="text">
      <string>Manual</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_timesFive">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>100</y>
+      <width>71</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+      <italic>false</italic>
+     </font>
+    </property>
+    <property name="text">
+     <string>x5</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

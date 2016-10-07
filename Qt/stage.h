@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: stage.h
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 #ifndef STAGE_H
 #define STAGE_H
 

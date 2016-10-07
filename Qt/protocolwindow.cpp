@@ -1,3 +1,10 @@
+/*
+ * IHM_REV2: protocolwindow.cpp
+ *
+ * Author: Vicente Cunha
+ * Date: June 2016
+ */
+
 /* =======================================================================
  * Includes
  * ======================================================================= */
@@ -168,7 +175,7 @@ void protocolwindow::on_pb_decreaseStage_clicked()
 
 void protocolwindow::on_pb_increaseLoad_clicked()
 {
-    int newLoad = ui->cb_loadTimesFive->isChecked() ? load + 5 : load + 1;
+    unsigned int newLoad = ui->cb_loadTimesFive->isChecked() ? load + 5 : load + 1;
     load = (newLoad <= MAXLOAD_WATTS) ? newLoad : load;
     ui->lbl_loadValue->setText(QString::number(load));
     stage_t stage(stageId, load, time);
@@ -177,7 +184,7 @@ void protocolwindow::on_pb_increaseLoad_clicked()
 
 void protocolwindow::on_pb_decreaseLoad_clicked()
 {
-    int newLoad = ui->cb_loadTimesFive->isChecked() ? load - 5 : load - 1;
+    unsigned int newLoad = ui->cb_loadTimesFive->isChecked() ? load - 5 : load - 1;
     load = (newLoad >= MINLOAD_WATTS) ? newLoad : load;
     ui->lbl_loadValue->setText(QString::number(load));
     stage_t stage(stageId, load, time);

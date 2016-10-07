@@ -77,10 +77,11 @@ export QWS_DISPLAY=LinuxFB:mmWidth=105:mmHeight=140
 # Local variables
 #
 
-INBRAMED_APP=/usr/local/bin/IHM_REV1
+INBRAMED_APP=/usr/local/bin/IHM_REV2
 QT_FLAGS=-qws
 CONSOLE_PATH=/dev/tty1
 QTDIR_SYMBOLIC=/qtbuild
+SERIAL_ERROR_SCRIPT=/serialError.sh
 
 #
 # Symbolic links
@@ -90,6 +91,12 @@ if [ ! -L $QTDIR_SYMBOLIC ]; then
         echo "ln -s $QTDIR $QTDIR_SYMBOLIC" > $CONSOLE_PATH
         ln -s $QTDIR $QTDIR_SYMBOLIC
 fi
+
+#
+# Script permissions
+#
+
+chmod +x $SERIAL_ERROR_SCRIPT
 
 #
 # Main application
