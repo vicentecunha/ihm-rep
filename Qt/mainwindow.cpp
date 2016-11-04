@@ -45,7 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         serialErrorHandler();
     }
-    timer_com->start(100);
+    RS232_flushRX(SERIAL_PORT_NUMBER);
+    timer_com->start(TIMER_COM_PERIOD_MSEC);
 }
 
 MainWindow::~MainWindow()
@@ -71,13 +72,34 @@ void MainWindow::sendString(QString string)
     }
 }
 
+void MainWindow::timeoutCheck(int len)
+{
+    static int timeoutCounter = 0;
+    if (len == 0)
+    {
+        if (++timeoutCounter > TIMEOUT_MAX_COUNTS)
+        {
+            RS232_CloseComport(SERIAL_PORT_NUMBER);
+            if (RS232_OpenComport(SERIAL_PORT_NUMBER, SERIAL_PORT_BAUDRATE, "8N1") == 1)
+            {
+                serialErrorHandler();
+            }
+            RS232_flushRX(SERIAL_PORT_NUMBER);
+            bufStr = "";
+            timeoutCounter = 0;
+        }
+    } else timeoutCounter = 0;
+}
+
 void MainWindow::parseSerial(int len)
 {
+    timeoutCheck(len);
+
     // Extract received buffer
     for (int i = 0; i < len; i++)
     {
         bufStr += buf[i];
-        buf[i] = 0;
+        buf[i] = '\0';
     }
 
     // Tokenize string
@@ -87,10 +109,7 @@ void MainWindow::parseSerial(int len)
         if (bufStrList[i].length() >= 6)
         {
             rpm = bufStrList[i].left(3).toInt();
-            if (rpm == 0)
-            {
-                torque = 0;
-            }
+            if (rpm == 0) torque = 0;
             else
             {
                 float newTorque = (float)load/(float)rpm;
