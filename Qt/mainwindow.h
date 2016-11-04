@@ -37,7 +37,8 @@ private:
     unsigned int old_load;
     unsigned int selection;
     QTime time;
-    QTimer* timer;
+    QTimer* timer_seconds;
+    QTimer* timer_com;
     protocol_t protocol;
     protocolwindow* protocolw;
     database_t database;
@@ -59,7 +60,8 @@ private slots:
     void on_pb_pause_clicked();
     void on_pb_protocol_clicked();
     void on_pb_manual_clicked();
-    void timer_timeout();
+    void timer_seconds_timeout();
+    void timer_com_timeout();
     void widget_destroyed();
 };
 

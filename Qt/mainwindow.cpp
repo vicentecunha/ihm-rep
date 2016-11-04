@@ -29,8 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
     torque = 0;
     bufStr = "";
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(timer_timeout()));
+    timer_seconds = new QTimer(this);
+    timer_com = new QTimer(this);
+    connect(timer_seconds, SIGNAL(timeout()), this, SLOT(timer_seconds_timeout()));
+    connect(timer_com, SIGNAL(timeout()), this, SLOT(timer_com_timeout()));
 
     ui->pb_stop->setEnabled(false);
     ui->pb_pause->setEnabled(false);
@@ -43,12 +45,14 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         serialErrorHandler();
     }
+    timer_com->start(100);
 }
 
 MainWindow::~MainWindow()
 {
     RS232_CloseComport(SERIAL_PORT_NUMBER);
-    delete timer;
+    delete timer_seconds;
+    delete timer_com;
     delete ui;
 }
 
@@ -125,7 +129,7 @@ void MainWindow::on_pb_decreaseLoad_clicked()
 
 void MainWindow::on_pb_play_clicked()
 {
-    timer->start(TIMER_PERIOD_MSEC);
+    timer_seconds->start(1000);
     if (paused)
     {
         load = old_load;
@@ -156,7 +160,7 @@ void MainWindow::on_pb_play_clicked()
 
 void MainWindow::on_pb_stop_clicked()
 {
-    timer->stop();
+    timer_seconds->stop();
     paused = false;
     time.setHMS(0,0,0);
     ui->lbl_timeValue->setText(time.toString("hh:mm:ss"));
@@ -187,7 +191,7 @@ void MainWindow::on_pb_stop_clicked()
 
 void MainWindow::on_pb_pause_clicked()
 {
-    timer->stop();
+    timer_seconds->stop();
     paused = true;
     old_load = load;
     // Reset load:
@@ -236,9 +240,9 @@ void MainWindow::on_pb_manual_clicked()
     ui->lbl_currentProtocol->setText(MANUAL_STRING);
 }
 
-void MainWindow::timer_timeout()
+void MainWindow::timer_seconds_timeout()
 {
-    time = time.addMSecs(TIMER_PERIOD_MSEC);
+    time = time.addMSecs(TIMER_SECONDS_PERIOD_MSEC);
     if (protocol.getId() != MANUAL)
     {
         stage_t stage = protocol.getStageFromTime(time);
@@ -256,6 +260,10 @@ void MainWindow::timer_timeout()
         serialErrorHandler();
     }
     sendString(QString("%1").arg(load, 3, 10, QChar('0')));
+}
+
+void MainWindow::timer_com_timeout()
+{
     parseSerial(RS232_PollComport(SERIAL_PORT_NUMBER, buf, SERIAL_BUFFER_LENGTH));
     ui->lbl_frequencyValue->setText(QString::number(rpm));
     ui->lbl_torqueValue->setText(QString::number(torque, 'f', 2));

@@ -24,6 +24,7 @@ const QString MANUAL_STRING = "Manual";
 const int SERIAL_PORT_NUMBER = 16; // ttyUSB0
 const int SERIAL_PORT_BAUDRATE = 9600;
 const int SERIAL_BUFFER_LENGTH = 4096;
-const int TIMER_PERIOD_MSEC = 100;
+const int TIMER_SECONDS_PERIOD_MSEC = 1000;
+const int TIMER_COM_PERIOD_MSEC = 100;
 
 #endif // CONSTANTS_H
