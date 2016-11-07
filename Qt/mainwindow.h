@@ -52,7 +52,6 @@ private:
     void sendString(QString);
     void parseSerial(int);
     void serialErrorHandler();
-    void timeoutCheck(int);
 
 private slots:
     void on_pb_increaseLoad_clicked();
