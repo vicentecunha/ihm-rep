@@ -32,7 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     std::fill_n(buf, SERIAL_BUFFER_LENGTH, 0);
 
     timer_seconds = new QTimer(this);
+    timer_com = new QTimer(this);
     connect(timer_seconds, SIGNAL(timeout()), this, SLOT(timer_seconds_timeout()));
+    connect(timer_com, SIGNAL(timeout()), this, SLOT(timer_com_timeout()));
 
     ui->pb_stop->setEnabled(false);
     ui->pb_pause->setEnabled(false);
@@ -40,10 +42,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     database = saveFileParser.download(SAVE_FILE);
     selection = database.getSelection();
+    if (RS232_OpenComport(SERIAL_PORT_NUMBER, SERIAL_PORT_BAUDRATE, "8N1") == 1) serialErrorHandler();
+    timer_com->start(100);
 }
 
 MainWindow::~MainWindow()
 {
+    delete timer_com;
     delete timer_seconds;
     RS232_CloseComport(SERIAL_PORT_NUMBER);
     delete ui;
@@ -53,12 +58,14 @@ MainWindow::~MainWindow()
  * Private Functions
  * ======================================================================= */
 
-void MainWindow::sendString(QString string)
+void MainWindow::sendLoad(unsigned int load)
 {
-    int size = string.size();
-    unsigned char buffer[size];
-    memcpy(buffer, string.toStdString().c_str(), size);
-    RS232_SendBuf(SERIAL_PORT_NUMBER, buffer, size);
+    QString loadString = QString("%1").arg(load, 3, 10, QChar('0'));
+    unsigned char buffer[5];
+    buffer[0] = 0xA0;
+    buffer[1] = 0x00;
+    memcpy((unsigned char*)(buffer+2), loadString.toStdString().c_str(), 3);
+    RS232_SendBuf(SERIAL_PORT_NUMBER, buffer, 5);
 }
 
 void MainWindow::parseSerial(int len)
@@ -84,6 +91,12 @@ void MainWindow::parseSerial(int len)
             torque = (newTorque > 4) ? 4 : newTorque;
         }
     }
+}
+
+void MainWindow::serialErrorHandler()
+{
+    system("serialError.sh");
+    exit(-1);
 }
 
 /* =======================================================================
@@ -231,15 +244,14 @@ void MainWindow::timer_seconds_timeout()
     }
     ui->lbl_timeValue->setText(time.toString("hh:mm:ss"));
     ui->lbl_loadValue->setText(QString::number(load));
+    sendLoad(load);
+}
 
-    if (RS232_OpenComport(SERIAL_PORT_NUMBER, SERIAL_PORT_BAUDRATE, "8N1") == 1) return;
-    RS232_SendByte(SERIAL_PORT_NUMBER, 0xA0);
-    RS232_SendByte(SERIAL_PORT_NUMBER, 0x00);
-    sendString(QString("%1").arg(load, 3, 10, QChar('0')));
+void MainWindow::timer_com_timeout()
+{
     parseSerial(RS232_PollComport(SERIAL_PORT_NUMBER, buf, SERIAL_BUFFER_LENGTH));
     ui->lbl_frequencyValue->setText(QString::number(rpm));
     ui->lbl_torqueValue->setText(QString::number(torque, 'f', 2));
-    RS232_CloseComport(SERIAL_PORT_NUMBER);
 }
 
 void MainWindow::widget_destroyed()
