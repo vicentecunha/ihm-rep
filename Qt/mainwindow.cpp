@@ -32,9 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     std::fill_n(buf, SERIAL_BUFFER_LENGTH, 0);
 
     timer_seconds = new QTimer(this);
-    timer_com = new QTimer(this);
     connect(timer_seconds, SIGNAL(timeout()), this, SLOT(timer_seconds_timeout()));
-    connect(timer_com, SIGNAL(timeout()), this, SLOT(timer_com_timeout()));
 
     ui->pb_stop->setEnabled(false);
     ui->pb_pause->setEnabled(false);
@@ -42,18 +40,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     database = saveFileParser.download(SAVE_FILE);
     selection = database.getSelection();
-
-    if (RS232_OpenComport(SERIAL_PORT_NUMBER, SERIAL_PORT_BAUDRATE, "8N1") == 1)
-    {
-        serialErrorHandler();
-    }
-    timer_com->start(TIMER_COM_PERIOD_MSEC);
 }
 
 MainWindow::~MainWindow()
 {
     delete timer_seconds;
-    delete timer_com;
     RS232_CloseComport(SERIAL_PORT_NUMBER);
     delete ui;
 }
@@ -67,62 +58,32 @@ void MainWindow::sendString(QString string)
     int size = string.size();
     unsigned char buffer[size];
     memcpy(buffer, string.toStdString().c_str(), size);
-    if (RS232_SendBuf(SERIAL_PORT_NUMBER, buffer, size) == -1) serialErrorHandler();
+    RS232_SendBuf(SERIAL_PORT_NUMBER, buffer, size);
 }
 
 void MainWindow::parseSerial(int len)
 {
     static QString bufStr = "";
-    static int timeoutCounter = 0;
-
-    /*
-    if (len <= 0)
-    {
-        if (++timeoutCounter > TIMEOUT_MAX_COUNTS)
-        {
-            timeoutCounter = 0;
-            bufStr = "";
-            RS232_flushRX(SERIAL_PORT_NUMBER);
-            RS232_CloseComport(SERIAL_PORT_NUMBER);
-            if (RS232_OpenComport(SERIAL_PORT_NUMBER, SERIAL_PORT_BAUDRATE, "8N1") == 1)
-            {
-                serialErrorHandler();
-            }
-            return;
-        }
-    } else timeoutCounter = 0;
-    */
 
     // Extract received buffer
     for (int i = 0; i < len; i++)
     {
-        bufStr += buf[i];
+        if (buf[i] == 'B') bufStr = "";
+        else bufStr += buf[i];
         buf[i] = '\0';
     }
 
     // Parse string
-    for (int i = 0; i < bufStr.length(); i++)
+    if (bufStr.length() >= 3)
     {
-        if (bufStr[i] == 'B' && i < bufStr.length() - 3)
+        rpm = bufStr.left(3).toInt();
+        if (rpm == 0) torque = 0;
+        else
         {
-            rpm = (bufStr.mid(i+1, 3)).toInt();
-            if (rpm == 0) torque = 0;
-            else
-            {
-                float newTorque = (float)load/(float)rpm;
-                torque = (newTorque > 4) ? 4 : newTorque;
-            }
+            float newTorque = (float)load/(float)rpm;
+            torque = (newTorque > 4) ? 4 : newTorque;
         }
     }
-
-    // Keep the last message token
-    bufStr = bufStr.right(8);
-}
-
-void MainWindow::serialErrorHandler()
-{
-    system("serialError.sh");
-    exit(1);
 }
 
 /* =======================================================================
@@ -271,17 +232,14 @@ void MainWindow::timer_seconds_timeout()
     ui->lbl_timeValue->setText(time.toString("hh:mm:ss"));
     ui->lbl_loadValue->setText(QString::number(load));
 
-    if (RS232_SendByte(SERIAL_PORT_NUMBER, 0xA0) == 1) serialErrorHandler();
-    if (RS232_SendByte(SERIAL_PORT_NUMBER, 0x00) == 1) serialErrorHandler();
+    if (RS232_OpenComport(SERIAL_PORT_NUMBER, SERIAL_PORT_BAUDRATE, "8N1") == 1) return;
+    RS232_SendByte(SERIAL_PORT_NUMBER, 0xA0);
+    RS232_SendByte(SERIAL_PORT_NUMBER, 0x00);
     sendString(QString("%1").arg(load, 3, 10, QChar('0')));
-}
-
-void MainWindow::timer_com_timeout()
-{
-    int n = RS232_PollComport(SERIAL_PORT_NUMBER, buf, SERIAL_BUFFER_LENGTH);
-    parseSerial(n);
+    parseSerial(RS232_PollComport(SERIAL_PORT_NUMBER, buf, SERIAL_BUFFER_LENGTH));
     ui->lbl_frequencyValue->setText(QString::number(rpm));
     ui->lbl_torqueValue->setText(QString::number(torque, 'f', 2));
+    RS232_CloseComport(SERIAL_PORT_NUMBER);
 }
 
 void MainWindow::widget_destroyed()
